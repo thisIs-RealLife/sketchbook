@@ -1,4 +1,4 @@
-package ru.oleg.sketchbook.model.security;
+package ru.oleg.sketchbook.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,7 +27,9 @@ public class SecurityUser implements UserDetails {
     }
 
     public static UserDetails convert(Client client){
+        System.out.println("Convert " + client.toString());
         return new User(
+
                 client.getEmail(),
                 client.getPassword(),
                 client.getStatusAccount().equals(StatusAccount.ACTIVE),

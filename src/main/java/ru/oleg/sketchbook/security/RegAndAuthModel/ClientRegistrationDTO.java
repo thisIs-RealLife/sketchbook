@@ -1,4 +1,4 @@
-package ru.oleg.sketchbook.model.security.RegisterAndAuthModel;
+package ru.oleg.sketchbook.security.RegAndAuthModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRegistration {
+public class ClientRegistrationDTO {
     @NotBlank
     @NotBlank(message = "Name не должен быть пуст")
     private String name;

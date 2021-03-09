@@ -1,17 +1,17 @@
 package ru.oleg.sketchbook.controllers;
 
+import com.sun.mail.smtp.SMTPAddressFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.oleg.sketchbook.model.security.RegisterAndAuthModel.UserRegistration;
-import ru.oleg.sketchbook.service.ClientRepositoryService;
+import ru.oleg.sketchbook.security.RegAndAuthModel.ClientRegistrationDTO;
+import ru.oleg.sketchbook.security.service.ClientRepositoryService;
 
 import javax.validation.Valid;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200")
 public class RegistrationController {
 
 
@@ -23,15 +23,21 @@ public class RegistrationController {
 
 
     @PostMapping("/registration")
-    public ResponseEntity registration(@Valid @RequestBody UserRegistration userRegistration, BindingResult bindingResult) {
+    public ResponseEntity registration(@Valid @RequestBody ClientRegistrationDTO clientRegistrationDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            return new ResponseEntity<>("Invalid data", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Вы ввели некорректные данные.", HttpStatus.BAD_REQUEST);
 
-        if (!clientRepositoryService.registration(userRegistration))
-            return new ResponseEntity<>("Пользователь зарегистрирован", HttpStatus.CREATED);
+        try {
+            if (!clientRepositoryService.registration(clientRegistrationDTO))
+                return new ResponseEntity<>("Пользователь с таким email уже зарегистрирован.", HttpStatus.CONFLICT);
+        } catch (SMTPAddressFailedException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Невозможно отправить пиьсмо с подтверждением на ваш адрес " +
+                    "электронной почты. Пожалуйста, проверьте свои данные.", HttpStatus.BAD_REQUEST);
+        }
 
 
-        return new ResponseEntity<>("Подтвердите Email", HttpStatus.CONFLICT);
+        return new ResponseEntity<>("Подтвердите Email.", HttpStatus.CREATED);
     }
 
 }

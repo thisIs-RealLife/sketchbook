@@ -1,11 +1,12 @@
-package ru.oleg.sketchbook.service;
+package ru.oleg.sketchbook.security.service;
 
+import com.sun.mail.smtp.SMTPAddressFailedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.oleg.sketchbook.model.Client;
 import ru.oleg.sketchbook.model.StatusEmail;
-import ru.oleg.sketchbook.model.security.RegisterAndAuthModel.UserRegistration;
+import ru.oleg.sketchbook.security.RegAndAuthModel.ClientRegistrationDTO;
 import ru.oleg.sketchbook.repository.UserRepo;
 
 import java.util.Optional;
@@ -26,17 +27,17 @@ public class ClientRepositoryService {
 
     /**
      * Регистрирует пользователя и отправляет письмо с активацией Email
-     * @param userRegistration
+     * @param clientRegistrationDTO
      * @return True, если клиент зарегистрирован и письмо отправлено
      *          False, если такой email уже присутствует в базе данных
      */
-    public boolean registration(UserRegistration userRegistration){
-        Optional<Client> isClient = userRepo.findClientByEmail(userRegistration.getEmail());
+    public boolean registration(ClientRegistrationDTO clientRegistrationDTO) throws SMTPAddressFailedException {
+        Optional<Client> isClient = userRepo.findClientByEmail(clientRegistrationDTO.getEmail());
 
         if (isClient.isPresent())
             return false;
 
-        Client client = userRepo.save(Client.convert(userRegistration, passwordEncoder));
+        Client client = userRepo.save(Client.convert(clientRegistrationDTO, passwordEncoder));
         mailSending.sent(client, "Activation code");
         return true;
     }

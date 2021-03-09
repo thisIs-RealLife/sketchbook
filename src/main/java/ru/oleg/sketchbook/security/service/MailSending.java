@@ -1,6 +1,7 @@
-package ru.oleg.sketchbook.service;
+package ru.oleg.sketchbook.security.service;
 
 
+import com.sun.mail.smtp.SMTPAddressFailedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,15 +20,15 @@ public class MailSending {
         this.javaMailSender = javaMailSender;
     }
 
-    public void sent(Client client, String subject){
+    public void sent(Client client, String subject) throws SMTPAddressFailedException {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 
         simpleMailMessage.setFrom(username);
         simpleMailMessage.setTo(client.getEmail());
         simpleMailMessage.setSubject(subject);
         simpleMailMessage.setText(defaultMessageActivation(client));
-
         javaMailSender.send(simpleMailMessage);
+
     }
 
     public String defaultMessageActivation(Client client){

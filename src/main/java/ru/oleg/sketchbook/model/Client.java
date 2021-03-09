@@ -3,7 +3,7 @@ package ru.oleg.sketchbook.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.oleg.sketchbook.model.security.RegisterAndAuthModel.UserRegistration;
+import ru.oleg.sketchbook.security.RegAndAuthModel.ClientRegistrationDTO;
 
 
 import javax.persistence.*;
@@ -43,12 +43,12 @@ public class Client {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public static Client convert(UserRegistration userRegistration, PasswordEncoder passwordEncoder){
+    public static Client convert(ClientRegistrationDTO clientRegistrationDTO, PasswordEncoder passwordEncoder){
         Client client = new Client();
-        client.setEmail(userRegistration.getEmail());
-        client.setName(userRegistration.getName());
-        client.setPassword(passwordEncoder.encode(userRegistration.getPassword()));
-        client.setSurname(userRegistration.getSurname());
+        client.setEmail(clientRegistrationDTO.getEmail());
+        client.setName(clientRegistrationDTO.getName());
+        client.setPassword(passwordEncoder.encode(clientRegistrationDTO.getPassword()));
+        client.setSurname(clientRegistrationDTO.getSurname());
         client.setStatusAccount(StatusAccount.ACTIVE);
         client.setStatusEmail(StatusEmail.NO);
         client.setRole(Role.USER);

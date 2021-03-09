@@ -1,11 +1,10 @@
 package ru.oleg.sketchbook.controllers;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import ru.oleg.sketchbook.service.ClientRepositoryService;
+import ru.oleg.sketchbook.security.service.ClientRepositoryService;
 
 @Controller
 public class ActivationEmailController {
